@@ -31,13 +31,12 @@ function login(hash, cb) {
 function bot(cookie) {
     var io = require("socket.io-client")(url, {transports: ['websocket'], extraHeaders: {origin: url, cookie: cookie}});
 
-    var inits = 0;
-    io.on('init', function(data) {
-        console.log('socket init');
-        inits++;
-        if (inits == 1) {
-            // only do this stuff the first time we connect, not on reconnection
-        }
+    io.once('init', function(data) {
+        console.log('socket init'); // only do this stuff the first time we connect, not on reconnection
+    });
+    
+     io.on('init', function(data) {
+        console.log('reconnection');
     });
 
     io.on('chat', function(txt, date) {
